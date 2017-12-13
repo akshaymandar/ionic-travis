@@ -41,10 +41,10 @@ before_cache:
 - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
-  - $HOME/Library/Caches/Yarn/v1/
-  - $HOME/.cache/yarn/v1/
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/Library/Caches/Yarn/v1/"
+  - "$HOME/.cache/yarn/v1/"
 before_install:
 - export LANG=en_US.UTF-8
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; brew install yarn ios-sim
@@ -55,19 +55,21 @@ before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/addkeys.sh ; fi
 script:
 - yarn install
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/build-ios.sh && ./travis/package-ios.sh ; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build-android.sh && ./travis/package-android.sh ; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/build-ios.sh && ./travis/package-ios.sh
+  ; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build-android.sh && ./travis/package-android.sh
+  ; fi
 env:
   global:
   - JAVA_HOME=/usr/lib/jvm/java-8-oracle
 deploy:
-  provider: releases
-  api_key:
-    secure: 1WU0Csb0tb7rKRbRE6oV6wBdHozMTE+uWkBMD0RSc9ZVzrl4aravifrUZNq5QPjt13eB8ZuMQTi+6882cyEtr68Uhy8LE/85I86AkyOsxQdnPgoB4fLFuow7fc80+lCH+QLc8HU9XH5Jwx/a9f2HxSv5ZGkluaHkMglGLTTIqE0pKDWfowmyrBCajSHIXNlPPYaEhKHKOmJkFUgn3kwYwPbV3CgYAQXoLOctK6TxvKlKL0FTmNPX3+MVUlY0jzAn9DEV9eXQ8bvomRJC4KQxTSh9xJKCba/C0wgUkO/3EECCPIArrdYHKzFjpXP18SIbvuBQvPoGHUcfClFIKP8G0gXYSCyiMAZ4b3a6CpydMb+PW0zGsEqEHL1EZlhn5cbYZzUfXKIYutO5A8h9dDcrCqOhUIzo2ZOy69sN9oSPPJRrvZOUOo+yzZHSutLI6r5ncVislRIQFw1QDN8HCJAfsDqDz2NcL3bJt8vRgHiI/98lKFIqkErrWwggGASIs0npmBVnlaraTUUW+B08MpkTXLdwcj98X8mMbSDThlNFJUymY7+HJ+YwKtdZ/pjfn7zAXaaPLn2v8Vu5M+uwV+KcVxRqLIRU41jB7DxkBA0Tu3sI6FHbaJwt6BB+xlJXw3d2MLeaJqN1+tc2rb6BiTIlRoRS2k1kqdLQlsvuCmSS+5s=
-  file_glob: true
-  file: output/*
-  skip_cleanup: true
-  overwrite: true
+  provider: s3
+  access_key_id: AKIAI7TIZ77QTNNUG72A
+  secret_access_key:
+    secure: ql3bN3MDfMUXkLxb+8CtBVXF7TiYbQ9d7Ci4vXJKVhVfp0Gv/wfNM58Yp/WkzcCyh2G61AxzGi7fplTR2nmwM/HKqpCOZNAwUD+DyJ+FOwajcbGnfgbVnwcD8Y3OHiU4obFKq90oqBb8ANMPNQ2JOECo2v6ObFUPhc1OLwazWOIgB4Wq3TrpVZEmhA3U8Aaz39vfYVkC1D3iIFGzrqAzyYcFxwlm/+Q1VcMSQRammksaZB+IshjWb9iKb24uZUXMOFyy3v7cMMdln0dyKUI77KH5yogQAISNMLb4+HvQ6j8obCJajYvx8kZHo8P/+etEp9ynZXPo703dSgQTE/r1w/3PVpovvf/I+k7GNojvKy0iJyNEcb5Z3lHGLJr+X+tBL2J41jHsRhpjZxVWzpcl4HWp00q/WdFvkBj6SX0dGR4qhLo1PwKNBqjt3iQm1KFAFx9xC0ttVhW9EfLGv6KHpcnOKHvfcK08LuJvuDYvcUPh0NcXXpWX1PfI91tuOgzDeP8VTjgxew+JNQ5DiTaZnvVxaElifzWKQi4h96NhF5bFPwn6EBiAwj3B2Y2wfmORykJwjRI4l9klTCf8Os3gbVqeyzU89xVpDaSE5WXmUV3hz8V3r/tgvfploP8/lIh5ez6g4Z6F1W7IlbdEk8vz7Uv59SbdZ6mxvm3OBemTyJA=
+  bucket: dessdevops
+  local-dir: output/*
+  upload-dir: ionic-travis
+  acl: public_read_write
   on:
-    branch: master
-
+    repo: akshaymandar/ionic-travis
